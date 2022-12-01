@@ -1,4 +1,4 @@
-// 0.15
+// 0.16
 
 use sysinfo::{DiskExt, System, SystemExt};
 use colored::Colorize;

@@ -1,4 +1,4 @@
-// 0.15
+// 0.16
 
 use sysinfo::{Pid, ProcessExt, System, SystemExt, UserExt};
 use colored::Colorize;

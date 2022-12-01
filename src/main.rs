@@ -1,4 +1,4 @@
-// 0.15
+// 0.16
 
 
 use colored::Colorize;
@@ -35,7 +35,7 @@ fn hello_world() {
 
     println!("");
     println!("------------------------------------------------------------------");
-    println!("{}" , format!("recon-windows v0.15 beta").bold().green());
+    println!("{}" , format!("recon-windows v0.16 beta").bold().green());
     println!("");
 
 }
@@ -112,7 +112,7 @@ fn main_command_help() {
 
 fn main_command_version() {
 
-    println!("{}" , format!("recon-windows v0.15 beta"));
+    println!("{}" , format!("recon-windows v0.16 beta"));
 }
 
 fn hardware_command_loop() -> i32 {

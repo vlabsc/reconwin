@@ -1,4 +1,4 @@
-// 0.15
+// 0.16
 
 use num_cpus;
 use colored::Colorize;
