@@ -1,0 +1,160 @@
+
+V:\OneHalf\Programming\Rust\prgs\practice\reconwin\rewin011>REM del target\debug\rewin.exe 
+
+V:\OneHalf\Programming\Rust\prgs\practice\reconwin\rewin011>cargo build 
+
+V:\OneHalf\Programming\Rust\prgs\practice\reconwin\rewin011>cls
+
+V:\OneHalf\Programming\Rust\prgs\practice\reconwin\rewin011>cargo run 
+
+------------------------------------------------------------------
+recon-windows v0.11 beta
+
+hardware probe - cpu ...
+number of logical cores: 4
+0% - 2601 Mhz - GenuineIntel - CPU 1 - Intel(R) Core(TM) i7-6500U CPU @ 2.50GHz
+0% - 2601 Mhz - GenuineIntel - CPU 2 - Intel(R) Core(TM) i7-6500U CPU @ 2.50GHz
+0% - 2601 Mhz - GenuineIntel - CPU 3 - Intel(R) Core(TM) i7-6500U CPU @ 2.50GHz
+0% - 2601 Mhz - GenuineIntel - CPU 4 - Intel(R) Core(TM) i7-6500U CPU @ 2.50GHz
+
+hardware probe - network interfaces ...
+Ethernet: IPv6 - fe80::f3c1:ac95:d08c:85f
+Ethernet: IPv4 - 169.254.61.203
+Local Area Connection: IPv6 - fe80::324a:2fa3:a2a4:bdcd
+Local Area Connection: IPv4 - 169.254.228.42
+VirtualBox Host-Only Network: IPv6 - fe80::f31b:42ee:bbb5:7785
+VirtualBox Host-Only Network: IPv4 - 192.168.56.1
+Local Area Connection* 1: IPv6 - fe80::1d1:1ca:20cd:b886
+Local Area Connection* 1: IPv4 - 169.254.141.139
+Local Area Connection* 2: IPv6 - fe80::dd27:6c4f:e893:40bf
+Local Area Connection* 2: IPv4 - 169.254.174.226
+Wi-Fi: IPv6 - fe80::6049:6bc7:fa7:cd3a
+Wi-Fi: IPv4 - 172.16.4.108
+Loopback Pseudo-Interface 1: IPv6 - ::1
+Loopback Pseudo-Interface 1: IPv4 - 127.0.0.1
+
+disks ... 
+label: OS, fs: NTFS, mount: C:\, removalble:  no, total capacity: 474 GB, free-space: 172 GB
+label: OFFICE, fs: NTFS, mount: O:\, removalble:  no, total capacity: 594 GB, free-space: 269 GB
+label: DATA, fs: NTFS, mount: P:\, removalble:  no, total capacity: 208 GB, free-space: 70 GB
+label: VLABS, fs: NTFS, mount: V:\, removalble:  no, total capacity: 500 GB, free-space: 264 GB
+
+memory ... 
+total: 15 GB
+free : 10 GB
+used : 5 GB
+total swap: 2 GB
+used swap: 0 GB
+
+os ... 
+name: Windows
+kernel version: 19045
+os version: 10 (19045)
+os version (long): Windows 10 Home Single Language
+host name: DESKTOP-IVB3RV7
+uptime: 3 hours, 210 minutes, 12622 seconds
+boot time: 1669350876
+host name: DESKTOP-IVB3RV7
+current directory: V:\OneHalf\Programming\Rust\prgs\practice\reconwin\rewin011
+
+windows user accounts ... 
+user: Administrator, user id: Administrator, gid: 0, in groups: 1
+user: DefaultAccount, user id: DefaultAccount, gid: 0, in groups: 1
+user: Guest, user id: Guest, gid: 0, in groups: 1
+user: vlabs, user id: vlabs, gid: 0, in groups: 2
+user: WDAGUtilityAccount, user id: WDAGUtilityAccount, gid: 0, in groups: 0
+
+installed applications - windows registry ... 
+AMD Software
+CCleaner
+HxD Hex Editor 2.1
+IrfanView 4.60 (64-bit)
+Mozilla Firefox (x64 en-US)
+Mozilla Maintenance Service
+Notepad++ (64-bit x64)
+Dell SupportAssist
+Process Hacker 2.39 (r124)
+Speccy
+VLC media player
+WinRAR 6.11 (64-bit)
+XAMPP
+D-Link DWA-171
+vs_communityx64msi
+Intel(R) Management Engine Components
+Intel(R) Management Engine Components
+Java 8 Update 51 (64-bit)
+Maxx Audio Installer (x64)
+VNC Viewer 6.22.826
+Microsoft Visual C++ 2022 X64 Minimum Runtime - 14.32.31332
+Intel(R) Rapid Storage Technology
+Product Registration
+Intel(R) Serial IO
+Intel(R) Management Engine Components
+HP Deskjet 3540 series Basic Device Software
+Intel® PROSet/Wireless WiFi Software
+Windows PC Health Check
+AMD Catalyst Install Manager
+Microsoft Visual Studio Installer
+LibreOffice 7.1.4.2
+Microsoft VC++ redistributables repacked.
+Microsoft Update Health Tools
+Update for Windows 10 for x64-based Systems (KB5001716)
+Quickset64
+Dell Help & Support
+Application Verifier x64 External Package
+Intel(R) Chipset Device Software
+Product Improvement Study for HP Deskjet 3540 series
+Intel(R) Management Engine Driver
+Dell SupportAssist OS Recovery Plugin for Dell Update
+VirtViewer 10.0-256 (64-bit)
+Intel(R) PRO/Wireless Driver
+SmartByte Drivers and Services
+Intel(R) Rapid Storage Technology
+VS Script Debugging Common
+Intel(R) Serial IO
+Microsoft Visual C++ 2012 x64 Minimum Runtime - 11.0.50727
+Oracle VM VirtualBox 7.0.4
+Microsoft Visual C++ 2012 x64 Additional Runtime - 11.0.50727
+Adobe Acrobat (64-bit)
+AMD Settings
+Dell Foundation Services
+Microsoft Visual C++ 2022 X64 Debug Runtime - 14.32.31332
+Intel(R) Trusted Connect Service Client x64
+Universal CRT Tools x64
+Samsung USB Driver for Mobile Phones
+Windows App Certification Kit Native Components
+Branding64
+Intel(R) ME UninstallLegacy
+Microsoft Visual Studio Code
+Windows SDK DirectX x64 Remote
+vs_minshellx64msi
+Microsoft Visual C++ 2022 X64 Additional Runtime - 14.32.31332
+
+startup applications - windows registry (SOFTWARE\Microsoft\Windows\CurrentVersion\Run) ... 
+SecurityHealth = "%windir%\\system32\\SecurityHealthSystray.exe"
+RTHDVCPL = "\"C:\\Program Files\\Realtek\\Audio\\HDA\\RtkNGUI64.exe\" -s"
+RtHDVBg_MAXX6 = "\"C:\\Program Files\\Realtek\\Audio\\HDA\\RAVBg64.exe\" /MAXX6"
+RtHDVBg_PushButton = "\"C:\\Program Files\\Realtek\\Audio\\HDA\\RAVBg64.exe\" /IM"
+QuickSet = "c:\\Program Files\\Dell\\QuickSet\\QuickSet.exe"
+WavesSvc = "\"C:\\Program Files\\Waves\\MaxxAudio\\WavesSvc64.exe\""
+IAStorIcon = "\"C:\\Program Files\\Intel\\Intel(R) Rapid Storage Technology\\IAStorIconLaunch.exe\" \"C:\\Program Files\\Intel\\Intel(R) Rapid Storage Technology\\IAStorIcon.exe\" 60"
+
+startup applications - windows registry (SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce)
+
+windows clipboard ... 
+notepad
+
+user_directories_info ... 
+home dir: C:\Users\senth
+desktop dir: C:\Users\senth\Desktop
+documents dir: C:\Users\senth\Documents
+downloads dir: C:\Users\senth\Downloads
+pictures dir: C:\Users\senth\Pictures
+music dir: C:\Users\senth\Music
+videos dir: C:\Users\senth\Videos
+
+appdata_roaming_directory_files info
+appdata_local_directory_files info
+appdata_local_temp_directory_files info
+windows_temp_directory_files info
+------------------------------------------------------------------
