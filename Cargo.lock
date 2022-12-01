@@ -973,6 +973,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "reconwin"
+version = "0.6.0"
+dependencies = [
+ "chrono",
+ "cli-clipboard",
+ "colored",
+ "directories",
+ "evtx",
+ "local-ip-address",
+ "num_cpus",
+ "sysinfo",
+ "walkdir",
+ "winreg",
+ "xml-rs",
+]
+
+[[package]]
 name = "redox_syscall"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1016,23 +1033,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3acd125665422973a33ac9d3dd2df85edad0f4ae9b00dafb1a05e43a9f5ef8e7"
 dependencies = [
  "winapi",
-]
-
-[[package]]
-name = "rewin"
-version = "0.6.0"
-dependencies = [
- "chrono",
- "cli-clipboard",
- "colored",
- "directories",
- "evtx",
- "local-ip-address",
- "num_cpus",
- "sysinfo",
- "walkdir",
- "winreg",
- "xml-rs",
 ]
 
 [[package]]

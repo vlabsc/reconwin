@@ -91,7 +91,7 @@ fn main_command_loop() -> i32 {
             },
             //_ => print!("what command is this {command}"),
             _ => { 
-                println!("{command} not found.");
+                println!("{command} command not found.");
             },
         }
         //println!("command is: {command}");
@@ -147,25 +147,25 @@ fn hardware_command_loop() -> i32 {
                 hardware_command_help();
             },
             "cpu" => {
-                hardware_cpu_command_execute();
+                hardware_command_cpu_execute();
             },
             "nw" | "network" => {
-                hardware_nw_command_execute();
+                hardware_command_nw_execute();
             },    
             "disks" => {
-                windows_disks_command_execute();
+                windows_command_disks_execute();
             },
             "mem" => {
-                windows_mem_command_execute();
+                windows_command_mem_execute();
             },
             "all" => {
-                hardware_all_command_execute();
+                hardware_command_all_execute();
             },
             ".." => {
                 return 55;
             }
             _ => {
-                println!("{:?} not found.", command);
+                println!("{:?} command not found.", command);
             },
         }
         //println!("command is: {command}");
@@ -189,7 +189,7 @@ fn hardware_command_help() {
 }
 
 
-fn hardware_cpu_command_execute() -> i32 {
+fn hardware_command_cpu_execute() -> i32 {
 
     let mut hardware = hardwareprobe::hardwareprobe {
         cpu_info: String::from("cpu info"),
@@ -202,7 +202,7 @@ fn hardware_cpu_command_execute() -> i32 {
     return 100;
 }
 
-fn hardware_nw_command_execute() -> i32 {
+fn hardware_command_nw_execute() -> i32 {
 
     let mut hardware = hardwareprobe::hardwareprobe {
         cpu_info: String::from("cpu info"),
@@ -215,7 +215,7 @@ fn hardware_nw_command_execute() -> i32 {
     return 100;
 }
 
-fn hardware_all_command_execute() {
+fn hardware_command_all_execute() {
 
     //let mut cpu_info = hardware::hardware_cpu{info: "cpu info".to_string()};
     
@@ -276,28 +276,28 @@ fn windows_command_loop() -> i32 {
                 windows_command_help();
             },
             "os" => {
-                windows_os_command_execute();
+                windows_command__os_execute();
             },
             "users" => {
-                windows_users_command_execute();
+                windows_command_users_execute();
             },
             "iapps" => {
-                windows_iapps_command_execute();
+                windows_command_iapps_execute();
             },
             "sapps" => {
-                windows_sapps_command_execute();
+                windows_command_sapps_execute();
             },
             "cb" => {
-                windows_cb_command_execute();
+                windows_command_cb_execute();
             },    
             "disks" => {
-                windows_disks_command_execute();
+                windows_command_disks_execute();
             },
             "mem" => {
-                windows_mem_command_execute();
+                windows_command_mem_execute();
             },
             "ps" => {
-                windows_process_command_execute();
+                windows_command_process_execute();
             },
             "ud" => {
                 windows_files_ud_command_execute();
@@ -318,7 +318,7 @@ fn windows_command_loop() -> i32 {
                 return 55;
             }
             _ => {
-                println!("{:?} not found.", command);
+                println!("{:?} command not found.", command);
             },
         }
         //println!("command is: {command}");
@@ -354,7 +354,7 @@ fn windows_command_help() {
     println!("quit / exit / q / e  - quit or exit reconwin program");
 }
 
-fn windows_os_command_execute() {
+fn windows_command__os_execute() {
 
     let mut windows = windows::windowsprobe {
         os_info: String::from("mem info"),
@@ -371,7 +371,7 @@ fn windows_os_command_execute() {
 }
 
 
-fn windows_users_command_execute() {
+fn windows_command_users_execute() {
 
     let mut windows = windows::windowsprobe {
         os_info: String::from("mem info"),
@@ -387,7 +387,7 @@ fn windows_users_command_execute() {
     println!("{}", windows.users_info);
 }
 
-fn windows_process_command_execute() {
+fn windows_command_process_execute() {
 
     let mut windows = windows::windowsprobe {
         os_info: String::from("mem info"),
@@ -405,7 +405,7 @@ fn windows_process_command_execute() {
 
 
 
-fn windows_cb_command_execute() {
+fn windows_command_cb_execute() {
 
     let mut windows = windows::windowsprobe {
         os_info: String::from("mem info"),
@@ -422,7 +422,7 @@ fn windows_cb_command_execute() {
 }
 
 
-fn windows_iapps_command_execute() {
+fn windows_command_iapps_execute() {
 
     let mut windows = windows::windowsprobe {
         os_info: String::from("mem info"),
@@ -438,7 +438,7 @@ fn windows_iapps_command_execute() {
     println!("{}", windows.installed_applications_info);
 }
 
-fn windows_sapps_command_execute() {
+fn windows_command_sapps_execute() {
 
     let mut windows = windows::windowsprobe {
         os_info: String::from("mem info"),
@@ -473,7 +473,7 @@ fn windows_command_datetime_execute() {
 
 }
 
-fn windows_disks_command_execute() {
+fn windows_command_disks_execute() {
     let mut disk = disk::diskprobe {
         disk_info: String::from("disk info"),
     };
@@ -482,7 +482,7 @@ fn windows_disks_command_execute() {
     println!("{}", disk.disk_info);
 }
 
-fn windows_mem_command_execute() {
+fn windows_command_mem_execute() {
     let mut mem = mem::memprobe {
         mem_info: String::from("mem info"),
     };
@@ -615,6 +615,9 @@ fn windows_files_command_loop() -> i32 {
             "temp" => {
                 windows_files_temp_command_execute();
             },
+            "desktop" => {
+                windows_files_desktop_command_execute();
+            },
             "all" => {
                 windows_all_command_execute();
             },
@@ -625,7 +628,7 @@ fn windows_files_command_loop() -> i32 {
                 return 55;
             }
             _ => {
-                println!("{:?} not found.", command);
+                println!("{:?} command not found.", command);
             },
         }
         //println!("command is: {command}");
@@ -640,6 +643,7 @@ fn windows_files_command_help() {
     println!("appdata              - list files within users %appdata% directory.");
     println!("local                - list files within users %appdata%\\Local directory.");
     println!("localtemp            - list files within users %appdata%\\Local\\Temp directory.");
+    println!("desktop              - list files within windows desktop directory.");
     println!("temp                 - list files within windows temp directory.");
     println!("test                 - test.");        
     println!("..                   - go back to main menu.");
@@ -656,6 +660,7 @@ fn windows_files_ud_command_execute() {
         appdata_local_directory_files: String::from("%AppData%\\Local directory info"),
         appdata_local_temp_directory_files: String::from("%AppData%\\Local\\Temp\\ directory info"),
         windows_temp_directory_files: String::from("\\Windows\\Temp\\ info"),
+        windows_desktop_directory_files: String::from("\\desktop\\ info"),
     };
 
     windowsfiles.windows_show_user_directories();
@@ -671,6 +676,7 @@ fn windows_files_appdata_command_execute() {
         appdata_local_directory_files: String::from("%AppData%\\Local directory info"),
         appdata_local_temp_directory_files: String::from("%AppData%\\Local\\Temp\\ directory info"),
         windows_temp_directory_files: String::from("\\Windows\\Temp\\ info"),
+        windows_desktop_directory_files: String::from("\\desktop\\ info"),
     };
 
     windowsfiles.windows_appdata_roaming_directory_files();
@@ -685,6 +691,7 @@ fn windows_files_local_command_execute() {
         appdata_local_directory_files: String::from("%AppData%\\Local directory info"),
         appdata_local_temp_directory_files: String::from("%AppData%\\Local\\Temp\\ directory info"),
         windows_temp_directory_files: String::from("\\Windows\\Temp\\ info"),
+        windows_desktop_directory_files: String::from("\\desktop\\ info"),
     };
 
     windowsfiles.windows_appdata_local_directory_files();
@@ -700,6 +707,7 @@ fn windows_files_localtemp_command_execute() {
         appdata_local_directory_files: String::from("%AppData%\\Local directory info"),
         appdata_local_temp_directory_files: String::from("%AppData%\\Local\\Temp\\ directory info"),
         windows_temp_directory_files: String::from("\\Windows\\Temp\\ info"),
+        windows_desktop_directory_files: String::from("\\desktop\\ info"),
     };
 
     windowsfiles.windows_appdata_local_temp_directory_files();
@@ -714,13 +722,27 @@ fn windows_files_temp_command_execute() {
         appdata_local_directory_files: String::from("%AppData%\\Local directory info"),
         appdata_local_temp_directory_files: String::from("%AppData%\\Local\\Temp\\ directory info"),
         windows_temp_directory_files: String::from("\\Windows\\Temp\\ info"),
+        windows_desktop_directory_files: String::from("\\desktop\\ info"),
     };
 
     windowsfiles.windows_temp_directory_files();
     println!("{}", windowsfiles.windows_temp_directory_files);
 }
 
+fn windows_files_desktop_command_execute() {
 
+    let mut windowsfiles = windowsfiles::windowsfilesprobe {
+        user_directories_info: String::from("user directories info"),
+        appdata_roaming_directory_files: String::from("%AppData% directory info"),
+        appdata_local_directory_files: String::from("%AppData%\\Local directory info"),
+        appdata_local_temp_directory_files: String::from("%AppData%\\Local\\Temp\\ directory info"),
+        windows_temp_directory_files: String::from("\\Windows\\Temp\\ info"),
+        windows_desktop_directory_files: String::from("\\desktop\\ info"),
+    };
+
+    windowsfiles.windows_desktop_directory_files();
+    println!("{}", windowsfiles.windows_desktop_directory_files);
+}
 
 
 fn exitthis() {

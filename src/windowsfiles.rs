@@ -1,4 +1,4 @@
-// 0.16
+// 0.16.1 - windows_desktop_directory_files
 
 use sysinfo::{Pid, ProcessExt, System, SystemExt, UserExt};
 use colored::Colorize;
@@ -15,6 +15,7 @@ pub struct windowsfilesprobe {
     pub appdata_local_directory_files: String,
     pub appdata_local_temp_directory_files: String,
     pub windows_temp_directory_files: String,
+    pub windows_desktop_directory_files: String,
 }
 
 
@@ -183,6 +184,52 @@ impl windowsfilesprobe {
                 self.windows_temp_directory_files.push_str(
                     format!("file: {}\n", entry.path().to_str().unwrap()).as_str()
                 );
+            }
+        }
+    }
+
+}
+
+impl windowsfilesprobe {
+
+    pub fn windows_desktop_directory_files(&mut self) {
+        
+        //return;
+
+        if let Some(user_dirs) = UserDirs::new() {
+
+            let desktopdir = user_dirs.desktop_dir();
+            let desktopdirstring = user_dirs.desktop_dir().unwrap().to_string_lossy();
+
+            let desktopdirstring_dir = format!("{}", desktopdirstring);
+            env::set_current_dir(&desktopdirstring_dir);
+
+            //env::set_current_dir(desktopdir);
+
+            match desktopdir {
+                Some(dir) => {
+                    self.windows_desktop_directory_files = format!("files under directory {} ... \n", desktopdir.unwrap().to_string_lossy()).cyan().bold().to_string();;
+                    //println!("files under directory {:?} ... \n", desktopdirstring_dir);
+
+                    for entry in WalkDir::new(".").into_iter().filter_map(|e| e.ok()) {
+                
+                        if entry.metadata().unwrap().is_dir() {
+                            self.windows_desktop_directory_files.push_str(
+                            format!("dir: {}\n", entry.path().to_str().unwrap()).as_str()
+                            );
+
+                            //println!("dir: {}\n", entry.path().display());
+
+                        } else if entry.metadata().unwrap().is_file() {
+                            self.windows_desktop_directory_files.push_str(
+                            format!("file: {}\n", entry.path().to_str().unwrap()).as_str()
+                            );
+
+                            //println!("file: {}\n", entry.path().display());
+                        }
+                    }
+                },
+                None => println!("error"),
             }
         }
     }
