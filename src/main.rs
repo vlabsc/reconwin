@@ -122,7 +122,7 @@ fn hardware_command_loop() -> i32 {
     
     'commandmain: loop {
         println!("");
-        print!("hardware> ");
+        print!("rewin> hardware> ");
         let _=stdout().flush();
 
         stdin.read_line(&mut command);
@@ -251,7 +251,7 @@ fn windows_command_loop() -> i32 {
     
     'commandmain: loop {
         println!("");
-        print!("windows> ");
+        print!("rewin> windows> ");
         let _=stdout().flush();
 
         stdin.read_line(&mut command);
@@ -341,6 +341,7 @@ fn windows_command_help() {
     println!("cb                   - list clipboard content.");
     println!("files                - list files within specific windows directory.");
     println!("time                 - print the current windows time.");
+    println!("reg                  - . TODO. probe windows registry. TODO. ");
     
     println!("mem                  - probe memory related information (total memory, available free, utilized)");
     println!("disks                - list available disks within windows system.");
@@ -576,7 +577,7 @@ fn windows_files_command_loop() -> i32 {
 
     'commandmain: loop {
         println!("");
-        print!("windows> files> ");
+        print!("rewin> windows> files> ");
         let _=stdout().flush();
 
         stdin.read_line(&mut command);
