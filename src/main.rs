@@ -83,6 +83,9 @@ fn main_command_loop() -> i32 {
                     return 0;
                 }
             },
+            "cls" => {
+                clrscr();
+            },
             "v" | "version" | "ver" => {
                 main_command_version();
             }
@@ -101,7 +104,7 @@ fn main_command_loop() -> i32 {
 
 fn main_command_help() {
 
-    println!("command              - description ");
+//    println!("command              - description ");
     println!("hardware / hw        - probe hardware related information");
     println!("windows / win        - probe windows related informationo (directories, temp files; etc)");
     println!("version / ver / v    - get the version of reconwin program");
@@ -161,6 +164,9 @@ fn hardware_command_loop() -> i32 {
             "all" => {
                 hardware_command_all_execute();
             },
+            "cls" => {
+                clrscr();
+            },
             ".." => {
                 return 55;
             }
@@ -176,16 +182,18 @@ fn hardware_command_loop() -> i32 {
 
 fn hardware_command_help() {
 
-    println!("command              - description ");
+    println!("basic commands");
+    println!("..                   - go back to main menu.");
+    println!("version / ver / v    - get the version of reconwin program");
+    println!("h / help / ?         - get available commands within this section");
+    println!("quit / exit / q / e  - quit or exit reconwin program");
+    println!("\nspecific commands");
+//    println!("command              - description ");
     println!("cpu                  - probe cpu information (frequency, number of cores; etc)");
     println!("nw                   - probe network interfaces information (IPv6 IP address, IPv4 IP address; etc)");
     println!("mem                  - probe memory related information (total memory, available free, utilized)");
     println!("disks                - list available disks within windows system.");
     println!("all                  - probe all info - cpu, network and memory.");
-    println!("..                   - go back to main menu.");
-    println!("version / ver / v    - get the version of reconwin program");
-    println!("h / help / ?         - get available commands within this section");
-    println!("quit / exit / q / e  - quit or exit reconwin program");
 }
 
 
@@ -317,6 +325,9 @@ fn windows_command_loop() -> i32 {
             ".." => {
                 return 55;
             }
+            "cls" => {
+                clrscr();
+            },
             _ => {
                 println!("{:?} command not found.", command);
             },
@@ -330,7 +341,13 @@ fn windows_command_loop() -> i32 {
 
 fn windows_command_help() {
 
-    println!("command              - description ");
+    println!("basic commands");
+    println!("..                   - go back to main menu.");
+    println!("version / ver / v    - get the version of reconwin program");
+    println!("h / help / ?         - get available commands within this section");
+    println!("quit / exit / q / e  - quit or exit reconwin program");
+    println!("\nspecific commands");
+//    println!("command              - description ");
     println!("os                   - probe operating system related information.");
     println!("users                - probe windows account details. list of users within windows system.");
     println!("iapps                - list of installed programs within the windows system.");
@@ -341,18 +358,13 @@ fn windows_command_help() {
     println!("cb                   - list clipboard content.");
     println!("files                - list files within specific windows directory.");
     println!("time                 - print the current windows time.");
-    println!("reg                  - . TODO. probe windows registry. TODO. ");
+    println!("reg                  - . TODO. probe windows registry. TODO . ");
+    println!("stasks               - . TODO. probe scheduled tasks. TODO . ");
+    println!("services             - . TODO. probe windows services. TODO . ");
     
     println!("mem                  - probe memory related information (total memory, available free, utilized)");
     println!("disks                - list available disks within windows system.");
-    println!("all                  - probe all info");
-
-    
-        
-    println!("..                   - go back to main menu.");
-    println!("version / ver / v    - get the version of reconwin program");
-    println!("h / help / ?         - get available commands within this section");
-    println!("quit / exit / q / e  - quit or exit reconwin program");
+    println!("all                  - probe all info");        
 }
 
 fn windows_command__os_execute() {
@@ -625,6 +637,9 @@ fn windows_files_command_loop() -> i32 {
             "files" => {
                 windows_all_command_execute();
             },
+            "cls" => {
+                clrscr();
+            },
             ".." => {
                 return 55;
             }
@@ -639,7 +654,13 @@ fn windows_files_command_loop() -> i32 {
 
 fn windows_files_command_help() {
 
-    println!("command              - description ");
+    println!("basic commands");
+    println!("..                   - go back to main menu.");
+    println!("version / ver / v    - get the version of reconwin program");
+    println!("h / help / ?         - get available commands within this section");
+    println!("quit / exit / q / e  - quit or exit reconwin program");
+    println!("\nspecific commands");
+//    println!("command              - description ");
     println!("ud                   - list windows users directories.");
     println!("appdata              - list files within users %appdata% directory.");
     println!("local                - list files within users %appdata%\\Local directory.");
@@ -647,10 +668,6 @@ fn windows_files_command_help() {
     println!("desktop              - list files within windows desktop directory.");
     println!("temp                 - list files within windows temp directory.");
     println!("test                 - test.");        
-    println!("..                   - go back to main menu.");
-    println!("version / ver / v    - get the version of reconwin program");
-    println!("h / help / ?         - get available commands within this section");
-    println!("quit / exit / q / e  - quit or exit reconwin program");
 }
 
 fn windows_files_ud_command_execute() {
@@ -756,4 +773,8 @@ fn exitthis() {
 fn print_end_of_program() {
 
     println!("------------------------------------------------------------------");
+}
+
+fn clrscr() {
+    println!("{}[2J{esc}[1;1H", esc = 27 as char);
 }

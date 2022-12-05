@@ -2,6 +2,7 @@
 
 use sysinfo::{DiskExt, System, SystemExt};
 use colored::Colorize;
+//use std::time::Instant;
 
 pub struct diskprobe {
     pub disk_info: String,
@@ -11,6 +12,8 @@ pub struct diskprobe {
 impl diskprobe {
     
     pub fn windows_disk_info(&mut self) {
+
+        //let start = Instant::now();
 
         let sys = System::new_all();
 
@@ -37,5 +40,9 @@ impl diskprobe {
             );
             self.disk_info.push_str(format!("\n").as_str());
         }
+
+        //println!("total time elapsed: {:?}", start.elapsed());
+        //println!("total time elapsed: {a}", a=5);
+
     }
 }
