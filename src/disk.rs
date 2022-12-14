@@ -26,7 +26,7 @@ impl diskprobe {
             }
 
             self.disk_info.push_str(format!(", mount: {}", disk.mount_point().display()).as_str());
-            self.disk_info.push_str(format!(", removalble: ").as_str());
+            self.disk_info.push_str(format!(", removable: ").as_str());
             if disk.is_removable()  {
                 self.disk_info.push_str(format!(" yes").as_str());
             } else {

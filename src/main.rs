@@ -206,7 +206,7 @@ fn hardware_command_cpu_execute() -> i32 {
 
     hardware.get_cpu_logical_cores();
 
-    println!("{}", hardware.cpu_info);
+    print!("{}", hardware.cpu_info);
     return 100;
 }
 
@@ -219,7 +219,7 @@ fn hardware_command_nw_execute() -> i32 {
 
     hardware.get_network_interfaces();
 
-    println!("{}", hardware.nw_info);
+    print!("{}", hardware.nw_info);
     return 100;
 }
 
@@ -231,12 +231,12 @@ fn hardware_command_all_execute() {
         cpu_info: String::from("cpu info"),
         nw_info: String::from("nw info")
     };
+
     let mut disk = disk::diskprobe {
         disk_info: String::from("disk info"),
     };
 
-
-let mut mem = mem::memprobe {
+    let mut mem = mem::memprobe {
         mem_info: String::from("mem info"),
     };
 
@@ -248,7 +248,7 @@ let mut mem = mem::memprobe {
     println!("{}", hardware.cpu_info);
     println!("{}", hardware.nw_info);
     println!("{}", mem.mem_info);
-    println!("{}", disk.disk_info);    
+    print!("{}", disk.disk_info);    
 }
 
 
@@ -350,7 +350,7 @@ fn windows_command_help() {
 //    println!("command              - description ");
     println!("os                   - probe operating system related information.");
     println!("users                - probe windows account details. list of users within windows system.");
-    println!("iapps                - list of installed programs within the windows system.");
+    println!("iapps                - list of installed programs within the windows system. probes through registry.");
     println!("sapps                - list of programs configured to run at startup. probes through registry.");
     println!("cb                   - list clipboard content.");
     println!("ps                   - list running processes within windows system.");
@@ -380,7 +380,7 @@ fn windows_command__os_execute() {
     };
 
     windows.windows_os_info();
-    println!("{}", windows.os_info);
+    print!("{}", windows.os_info);
 }
 
 
@@ -397,7 +397,7 @@ fn windows_command_users_execute() {
     };
 
     windows.windows_users_info();
-    println!("{}", windows.users_info);
+    print!("{}", windows.users_info);
 }
 
 fn windows_command_process_execute() {
@@ -413,7 +413,7 @@ fn windows_command_process_execute() {
     };
 
     windows.windows_process_information();
-    println!("{}", windows.process_info);
+    print!("{}", windows.process_info);
 }
 
 
@@ -431,7 +431,7 @@ fn windows_command_cb_execute() {
     };
 
     windows.windows_get_clipboard();
-    println!("{}", windows.clipboard_info);
+    print!("{}", windows.clipboard_info);
 }
 
 
@@ -448,7 +448,7 @@ fn windows_command_iapps_execute() {
     };
 
     windows.windows_registry_installed_applications_info();
-    println!("{}", windows.installed_applications_info);
+    print!("{}", windows.installed_applications_info);
 }
 
 fn windows_command_sapps_execute() {
@@ -464,7 +464,7 @@ fn windows_command_sapps_execute() {
     };
 
     windows.windows_registry_startup_applications_info();
-    println!("{}", windows.registry_startup_applications_info);
+    print!("{}", windows.registry_startup_applications_info);
 }
 
 fn windows_command_datetime_execute() {
@@ -492,7 +492,7 @@ fn windows_command_disks_execute() {
     };
 
     disk.windows_disk_info();
-    println!("{}", disk.disk_info);
+    print!("{}", disk.disk_info);
 }
 
 fn windows_command_mem_execute() {
@@ -501,7 +501,7 @@ fn windows_command_mem_execute() {
     };
 
     mem.windows_mem_info();
-    println!("{}", mem.mem_info);
+    print!("{}", mem.mem_info);
 }
 
 
@@ -550,33 +550,7 @@ fn windows_all_command_execute() {
     println!("{}", windows.clipboard_info);
 
     windows.windows_process_information();
-    println!("{}", windows.process_info);
-    
-    /*
-    windows.windows_show_user_directories();
-    println!("{}", windows.user_directories_info);
-    
-    windows.windows_appdata_roaming_directory_files();
-    println!("{}", windows.appdata_roaming_directory_files);
-
-    windows.windows_appdata_local_directory_files();
-    println!("{}", windows.appdata_local_directory_files);
-
-    windows.windows_appdata_local_temp_directory_files();
-    println!("{}", windows.appdata_local_temp_directory_files);
-
-    windows.windows_temp_directory_files();
-    println!("{}", windows.windows_temp_directory_files);
-    */
-
-
-    /*
-    windows::windows_test();
-    println!("");
-
-    //windowsevents::parse_events();
-    //println!("");
-    */
+    print!("{}", windows.process_info);
 
 }
 
@@ -632,7 +606,7 @@ fn windows_files_command_loop() -> i32 {
                 windows_files_desktop_command_execute();
             },
             "all" => {
-                windows_all_command_execute();
+                //windows_all_command_execute();
             },
             "files" => {
                 windows_all_command_execute();
@@ -682,7 +656,7 @@ fn windows_files_ud_command_execute() {
     };
 
     windowsfiles.windows_show_user_directories();
-    println!("{}", windowsfiles.user_directories_info);
+    print!("{}", windowsfiles.user_directories_info);
 }
 
 
@@ -698,7 +672,7 @@ fn windows_files_appdata_command_execute() {
     };
 
     windowsfiles.windows_appdata_roaming_directory_files();
-    println!("{}", windowsfiles.appdata_roaming_directory_files);
+    print!("{}", windowsfiles.appdata_roaming_directory_files);
 }
 
 fn windows_files_local_command_execute() {
@@ -713,7 +687,7 @@ fn windows_files_local_command_execute() {
     };
 
     windowsfiles.windows_appdata_local_directory_files();
-    println!("{}", windowsfiles.appdata_local_directory_files);
+    print!("{}", windowsfiles.appdata_local_directory_files);
 }
 
 
@@ -729,7 +703,7 @@ fn windows_files_localtemp_command_execute() {
     };
 
     windowsfiles.windows_appdata_local_temp_directory_files();
-    println!("{}", windowsfiles.appdata_local_temp_directory_files);
+    print!("{}", windowsfiles.appdata_local_temp_directory_files);
 }
 
 fn windows_files_temp_command_execute() {
@@ -744,7 +718,7 @@ fn windows_files_temp_command_execute() {
     };
 
     windowsfiles.windows_temp_directory_files();
-    println!("{}", windowsfiles.windows_temp_directory_files);
+    print!("{}", windowsfiles.windows_temp_directory_files);
 }
 
 fn windows_files_desktop_command_execute() {
@@ -759,7 +733,7 @@ fn windows_files_desktop_command_execute() {
     };
 
     windowsfiles.windows_desktop_directory_files();
-    println!("{}", windowsfiles.windows_desktop_directory_files);
+    print!("{}", windowsfiles.windows_desktop_directory_files);
 }
 
 
