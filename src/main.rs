@@ -253,6 +253,7 @@ fn hardware_command_all_execute() {
 
 
 fn windows_command_loop() -> i32 {
+fn windows_command_loop() -> i32 {
 
     let mut command: String = String::new();
     let stdin = io::stdin();
