@@ -16,6 +16,10 @@ pub struct windowsfilesprobe {
     pub appdata_local_temp_directory_files: String,
     pub windows_temp_directory_files: String,
     pub windows_desktop_directory_files: String,
+    pub windows_pfiles_directory_files: String,
+    pub windows_pfiles86_directory_files: String,
+    pub windows_windows_directory_files_info: String,
+    pub windows_windows_system32_directory_files_info: String,
 }
 
 
@@ -236,7 +240,97 @@ impl windowsfilesprobe {
 
 }
 
+impl windowsfilesprobe {
 
+    pub fn windows_pfiles_directory_files(&mut self) {
+        
+        //return;
+
+        env::set_current_dir("C:\\Program Files\\");
+        self.windows_pfiles_directory_files = format!("files under directory C:\\Program Files\\ ... \n").cyan().bold().to_string();
+
+        for entry in WalkDir::new(".").into_iter().filter_map(|e| e.ok()) {
+
+            if entry.metadata().unwrap().is_dir() {
+                self.windows_pfiles_directory_files.push_str(
+                    format!("dir: {}\n", entry.path().to_str().unwrap()).as_str()
+                );
+            } else if entry.metadata().unwrap().is_file() {
+                self.windows_pfiles_directory_files.push_str(
+                    format!("file: {}\n", entry.path().to_str().unwrap()).as_str()
+                );
+            }
+        }
+    }
+}
+
+impl windowsfilesprobe {
+
+    pub fn windows_pfiles86_directory_files(&mut self) {
+        
+        //return;
+
+        env::set_current_dir("C:\\Program Files (x86)\\");
+        self.windows_pfiles86_directory_files = format!("files under directory C:\\Program Files(x86)\\ ... \n").cyan().bold().to_string();
+
+        for entry in WalkDir::new(".").into_iter().filter_map(|e| e.ok()) {
+
+            if entry.metadata().unwrap().is_dir() {
+                self.windows_pfiles86_directory_files.push_str(
+                    format!("dir: {}\n", entry.path().to_str().unwrap()).as_str()
+                );
+            } else if entry.metadata().unwrap().is_file() {
+                self.windows_pfiles86_directory_files.push_str(
+                    format!("file: {}\n", entry.path().to_str().unwrap()).as_str()
+                );
+            }
+        }
+    }
+}
+
+impl windowsfilesprobe {
+
+    pub fn windows_windows_directory_files_probe(&mut self) {
+        
+        env::set_current_dir("C:\\Windows\\");
+        self.windows_windows_directory_files_info = format!("files under directory C:\\Windows\\ ... \n").cyan().bold().to_string();
+
+        for entry in WalkDir::new(".").into_iter().filter_map(|e| e.ok()) {
+
+            if entry.metadata().unwrap().is_dir() {
+                self.windows_windows_directory_files_info.push_str(
+                    format!("dir: {}\n", entry.path().to_str().unwrap()).as_str()
+                );
+            } else if entry.metadata().unwrap().is_file() {
+                self.windows_windows_directory_files_info.push_str(
+                    format!("file: {}\n", entry.path().to_str().unwrap()).as_str()
+                );
+            }
+        }
+    }
+}
+
+impl windowsfilesprobe {
+
+    pub fn windows_windows_system32_directory_files_probe(&mut self) {
+        
+        env::set_current_dir("C:\\Windows\\");
+        self.windows_windows_system32_directory_files_info = format!("files under directory C:\\Windows\\System32\\ ... \n").cyan().bold().to_string();
+
+        for entry in WalkDir::new("System32").into_iter().filter_map(|e| e.ok()) {
+
+            if entry.metadata().unwrap().is_dir() {
+                self.windows_windows_system32_directory_files_info.push_str(
+                    format!("dir: {}\n", entry.path().to_str().unwrap()).as_str()
+                );
+            } else if entry.metadata().unwrap().is_file() {
+                self.windows_windows_system32_directory_files_info.push_str(
+                    format!("file: {}\n", entry.path().to_str().unwrap()).as_str()
+                );
+            }
+        }
+    }
+}
 
 pub fn windows_test() {
 

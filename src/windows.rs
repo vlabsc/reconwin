@@ -8,6 +8,7 @@ use std::{env, fs};
 use directories::UserDirs;
 use walkdir::WalkDir;
 use chrono::prelude::*;
+use is_root::is_root;
 
 pub struct windowsprobe {
     pub os_info: String,
@@ -17,6 +18,7 @@ pub struct windowsprobe {
     pub clipboard_info: String,
     pub process_info: String,
     pub windows_datetime_info: String,
+    pub pwd_info: String,
 }
 
 impl windowsprobe {
@@ -43,7 +45,7 @@ impl windowsprobe {
             uptime_inminutes = uptime_inminutes % 60;
         }
 
-        self.os_info.push_str(format!("boot time: {}\n", sys.boot_time()).as_str());        
+        self.os_info.push_str(format!("boot time: {}\n", sys.boot_time()).as_str());
         self.os_info.push_str(format!("host name: {}\n", sys.host_name().as_deref().unwrap()).as_str());
         
         let current_dir = env::current_dir();
@@ -51,6 +53,30 @@ impl windowsprobe {
             match current_dir {
                 Ok(curdir) => self.os_info.push_str(format!("current directory: {}\n", curdir.into_os_string().into_string().unwrap()).as_str()),
                 Err(e) => self.os_info.push_str(format!("error while reading current directory {:?}\n", e).as_str()),
+            }
+        }
+
+        if is_root() {
+            self.os_info.push_str(format!("is administrator: yes\n").as_str());
+        }
+        else {
+            self.os_info.push_str(format!("is administrator: no\n").as_str());
+        }
+    }
+}
+
+impl windowsprobe {
+
+    pub fn windows_pwd(&mut self) {
+
+        let sys = System::new_all();
+
+        self.pwd_info = format!("present working directory ... \n").cyan().bold().to_string();
+        let current_dir = env::current_dir();
+        if current_dir.is_ok() {
+            match current_dir {
+                Ok(curdir) => self.pwd_info.push_str(format!("-> {}\n", curdir.into_os_string().into_string().unwrap()).as_str()),
+                Err(e) => self.pwd_info.push_str(format!("error while reading present working directory {:?}\n", e).as_str()),
             }
         }
     }
