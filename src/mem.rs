@@ -1,4 +1,4 @@
-// 0.16
+// 0.16.2 - naming ...
 
 use sysinfo::{System, SystemExt};
 use colored::Colorize;

@@ -1,4 +1,4 @@
-// 0.16
+// 0.16.2 - naming ...
 
 use num_cpus;
 use colored::Colorize;

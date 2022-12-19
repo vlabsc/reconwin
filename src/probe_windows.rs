@@ -1,4 +1,4 @@
-// 0.16
+// 0.16.2 - naming ...
 
 use sysinfo::{Pid, ProcessExt, System, SystemExt, UserExt};
 use colored::Colorize;
@@ -28,7 +28,7 @@ impl windowsprobe {
 
         let sys = System::new_all();
 
-        self.info_windows_osdetails = format!("os ... \n").cyan().bold().to_string();
+        self.info_windows_osdetails = format!("os details ... \n").cyan().bold().to_string();
 
         self.info_windows_osdetails.push_str(format!("name: {}\n", sys.name().as_deref().unwrap()).as_str());
         self.info_windows_osdetails.push_str(format!("kernel version: {}\n", sys.kernel_version().as_deref().unwrap()).as_str());

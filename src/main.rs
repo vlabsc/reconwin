@@ -1,4 +1,4 @@
-// 0.16
+// 0.16.2 - naming ...
 
 
 use colored::Colorize;
@@ -375,7 +375,7 @@ fn command_windows_help() {
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
     println!("\nspecific commands");
-    println!("os                   - probe operating system related information.");
+    println!("os                   - probe operating system related details.");
     println!("ud                   - list windows users directories.");
     println!("cb                   - list clipboard content.");
     println!("ps                   - list running processes within windows system.");
