@@ -10,14 +10,14 @@ use local_ip_address::list_afinet_netifas;
 
 pub struct hardwareprobe {
     pub info_cpu: String,
-    pub info_nw: String,
+    //pub info_nw: String,
 }
 
 impl Default for hardwareprobe {
     fn default() -> Self {
         hardwareprobe {
             info_cpu: String::from("cpu info"),
-            info_nw: String::from("nw info")
+            //info_nw: String::from("nw info")
         }
      }
 }
@@ -37,7 +37,7 @@ impl hardwareprobe {
         }
     }
 }
-
+/*
 impl hardwareprobe {
 
     pub fn get_network_interfaces(&mut self) {
@@ -56,3 +56,4 @@ impl hardwareprobe {
         }
     }
 }
+*/

@@ -14,17 +14,17 @@ mod disk;
 mod mem;
 mod probe_windows;
 mod probe_windows_files;
-mod windowsevents;
-
+mod probe_windows_events;
+mod probe_network;
 
 
 fn main() {
 
     hello_world();
     
-    let ret = command_main_loop();
+    //let ret = command_main_loop();
+    let ret = command_network_loop();
     //let mut ret = command_windows_files_loop();
-
     print_end_of_program();
 }
 
@@ -48,8 +48,8 @@ fn command_main_loop() -> i32 {
     'commandmain: loop {
         println!("");
         print!("rewin> ");
-        let _=stdout().flush();
 
+        let _=stdout().flush();
         stdin.read_line(&mut command);
         let _=stdout().flush();
         command.make_ascii_lowercase();
@@ -80,6 +80,13 @@ fn command_main_loop() -> i32 {
                     return 0;
                 }
             },
+            "network" | "nw" => {
+                command.clear();
+                let ret = command_network_loop();
+                if ret == 0 {
+                    return 0;
+                }
+            },
             "cls" | "clear" => {
                 clrscr();
             },
@@ -87,7 +94,7 @@ fn command_main_loop() -> i32 {
                 command_main_version_execute();
             }
             "?" | "help" | "h" => {
-                command_main_command_help_execute();
+                command_main_help_execute();
             },
             _ => {
                 if command.is_empty() {
@@ -103,7 +110,7 @@ fn command_main_loop() -> i32 {
     }
 }
 
-fn command_main_command_help_execute() {
+fn command_main_help_execute() {
         println!("basic commands");
         println!("..                   - go back to previous menu.");
         println!("version / ver / v    - get the version of reconwin program");
@@ -113,6 +120,8 @@ fn command_main_command_help_execute() {
         println!("\nmodules");
         println!("hardware / hw        - probe hardware related information");
         println!("windows / win        - probe windows related informationo (directories, temp files; etc)");
+        println!("network / nw         - . TODO . probe network related informationo (adapters, IP address, DNS servers; etc)");
+        println!("hunt                 - . TODO . the threat hunting module. specific to hunt threats and indicators within processes, registry, filesystem and across windows.");
     }
     
 fn command_main_version_execute() {
@@ -128,8 +137,8 @@ fn command_hardware_loop() -> i32 {
     'commandmain: loop {
         println!("");
         print!("rewin> hardware> ");
-        let _=stdout().flush();
 
+        let _=stdout().flush();
         stdin.read_line(&mut command);
         command.make_ascii_lowercase();
 
@@ -154,8 +163,8 @@ fn command_hardware_loop() -> i32 {
             "cpu" => {
                 command_hardware_cpu_execute();
             },
-            "nw" | "network" => {
-                command_hardware_nw_execute();
+            "nis" => {
+                command_network_nis_execute();
             },    
             "disks" => {
                 command_windows_disks_execute();
@@ -181,7 +190,6 @@ fn command_hardware_loop() -> i32 {
                 }
             },
         }
-        //println!("command is: {command}");
         command.clear();
     }
 }
@@ -194,12 +202,12 @@ fn command_hardware_help() {
     println!("h / help / ?         - get available commands within this section");
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
-    println!("\nspecific commands");
-    println!("cpu                  - probe cpu information (frequency, number of cores; etc)");
-    println!("nw                   - probe network interfaces information (IPv6 IP address, IPv4 IP address; etc)");
-    println!("mem                  - probe memory related information (total memory, available free, utilized)");
-    println!("disks                - list available disks within windows system.");
-    println!("all                  - probe all info - cpu, network and memory.");
+    println!("\nhardware module - specific commands");
+    println!("cpu     - probe cpu information (frequency, number of cores; etc)");
+    println!("nis     - probe network interfaces information (IPv6 IP address, IPv4 IP address; etc)");
+    println!("mem     - probe memory related information (total memory, available free, utilized)");
+    println!("disks   - list available disks within windows system.");
+    println!("all     - probe all info - cpu, network and memory.");
 }
 
 
@@ -207,7 +215,7 @@ fn command_hardware_cpu_execute() -> i32 {
 
     let mut hardware = probe_hardware::hardwareprobe {
         info_cpu: String::from("cpu info"),
-        info_nw: String::from("nw info")
+        //info_nw: String::from("nw info")
     };
 
     hardware.get_cpu_logical_cores();
@@ -216,24 +224,17 @@ fn command_hardware_cpu_execute() -> i32 {
     return 100;
 }
 
-fn command_hardware_nw_execute() -> i32 {
-
-    let mut hardware = probe_hardware::hardwareprobe {
-        info_cpu: String::from("cpu info"),
-        info_nw: String::from("nw info")
-    };
-
-    hardware.get_network_interfaces();
-
-    print!("{}", hardware.info_nw);
-    return 100;
-}
 
 fn command_hardware_all_execute() {
     
     let mut hardware = probe_hardware::hardwareprobe {
         info_cpu: String::from("cpu info"),
-        info_nw: String::from("nw info")
+        //info_nw: String::from("nw info")
+    };
+
+    let mut network = probe_network::networkprobe {
+        info_get_network_interfaces: String::from("nw info"),
+        info_get_dns_for_network_interfaces: String::from("dns info")
     };
 
     let mut disk = disk::diskprobe {
@@ -245,14 +246,130 @@ fn command_hardware_all_execute() {
     };
 
     hardware.get_cpu_logical_cores();
-    hardware.get_network_interfaces();
+    //hardware.get_network_interfaces();
+    network.probe_get_network_interfaces();
+
     mem.windows_mem_info();
     disk.windows_disk_info();
 
     println!("{}", hardware.info_cpu);
-    println!("{}", hardware.info_nw);
+    //println!("{}", hardware.info_nw);
+    println!("{}", network.info_get_network_interfaces);
     println!("{}", mem.mem_info);
     print!("{}", disk.disk_info);    
+}
+
+fn command_network_loop() -> i32 {
+
+    let mut command: String = String::new();
+    let stdin = io::stdin();
+    
+    'commandmain: loop {
+        println!("");
+        print!("rewin> network> ");
+
+        let _=stdout().flush();
+        stdin.read_line(&mut command);
+        command.make_ascii_lowercase();
+
+        if let Some('\n') = command.chars().next_back() {
+            command.pop();
+        }
+        if let Some('\r') = command.chars().next_back() {
+            command.pop();
+        }
+
+        match command.as_str() {
+            "quit" | "exit" | "q" | "e" =>
+            {
+                return 0;
+            },
+            "v" | "version" | "ver" => {
+                command_main_version_execute();
+            }
+            "?" | "help" | "h" => {
+                command_network_help();
+            },
+            "dns" => {
+                // do nothing
+                command_network_dns_execute();
+            },
+            "nis" => {
+                command_network_nis_execute();
+            },
+            "cls" | "clear" => {
+                clrscr();
+            },
+            ".." => {
+                return 55;
+            },
+            _ => {
+                if command.is_empty() {
+                    // do nothing
+                }
+                else {
+                    println!("{command} command not found.");
+                }
+            },
+        }
+        command.clear();
+    }
+}
+
+
+fn command_network_help() {
+
+    println!("basic commands");
+    println!("..                   - go back to previous menu.");
+    println!("version / ver / v    - get the version of reconwin program");
+    println!("h / help / ?         - get available commands within this section");
+    println!("quit / exit / q / e  - quit or exit reconwin program");
+    println!("cls / clear          - clears the screen.");
+    println!("\nnetwork module - specific commands");
+    println!("nis     - probe network interfaces information (IPv6 IP address, IPv4 IP address; etc)");
+    println!("dns     - probe assigned DNS servers for each adapter.");
+}
+
+fn command_network_nis_execute() -> i32 {
+
+    let mut network = probe_network::networkprobe {
+        info_get_network_interfaces: String::from("nw info"),
+        info_get_dns_for_network_interfaces: String::from("dns info")
+    };
+
+    /*
+    let mut hardware = probe_hardware::hardwareprobe {
+        info_cpu: String::from("cpu info"),
+        info_nw: String::from("nw info")
+    };
+    */
+    network.probe_get_network_interfaces();
+    print!("{}", network.info_get_network_interfaces);
+
+    //hardware.get_network_interfaces();
+    //print!("{}", hardware.info_nw);
+    return 100;
+}
+
+fn command_network_dns_execute() -> i32 {
+
+    let mut network = probe_network::networkprobe {
+        info_get_network_interfaces: String::from("nw info"),
+        info_get_dns_for_network_interfaces: String::from("dns info")
+    };
+
+    /*
+    let mut hardware = probe_hardware::hardwareprobe {
+        info_cpu: String::from("cpu info"),
+        info_nw: String::from("nw info")
+    };
+    */
+    network.probe_get_dns_for_network_interfaces();
+    //print!("{}", network.info_get_network_interfaces);
+
+    //hardware.get_network_interfaces();
+    //print!("{}", hardware.info_nw);
+    return 100;
 }
 
 
@@ -264,8 +381,8 @@ fn command_windows_loop() -> i32 {
     'commandmain: loop {
         println!("");
         print!("rewin> windows> ");
-        let _=stdout().flush();
 
+        let _=stdout().flush();
         stdin.read_line(&mut command);
         command.make_ascii_lowercase();
 
@@ -359,7 +476,6 @@ fn command_windows_loop() -> i32 {
                 }
             },
         }
-        //println!("command is: {command}");
         command.clear();
     }
 }
@@ -374,7 +490,7 @@ fn command_windows_help() {
     println!("h / help / ?         - get available commands within this section");
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
-    println!("\nspecific commands");
+    println!("\nwindows module - specific commands");
     println!("os                   - probe operating system related details.");
     println!("ud                   - list windows users directories.");
     println!("cb                   - list clipboard content.");
@@ -389,13 +505,13 @@ fn command_windows_help() {
     println!("disks                - list available disks within windows system.");
     println!("all                  - probe all info");
 
-    println!("\nsub modules");
-    println!("files                - probe files, directories, config paths, temp folders and others within windows fs.");
-    println!("events               - probe windows events. ");
-    println!("reg                  - . TODO. probe windows registry. TODO . ");
-    println!("stasks               - . TODO. probe scheduled tasks. TODO . ");
-    println!("services             - . TODO. probe windows services. TODO . ");
-    println!("process              - . TODO. probe windows processes. TODO . ");
+    println!("\nwindows module - sub modules");
+    println!("files       - probe files, directories, config paths, temp folders and others within windows fs.");
+    println!("events      - probe windows events. ");
+    println!("reg         - . TODO. probe windows registry. TODO . ");
+    println!("stasks      - . TODO. probe scheduled tasks. TODO . ");
+    println!("services    - . TODO. probe windows services. TODO . ");
+    println!("process     - . TODO. probe windows processes. TODO . ");
 }
 
 
@@ -566,9 +682,6 @@ fn windows_isadmin_command_execute() {
 
     windows.probe_windows_isadmin();
     print!("{}", windows.info_windows_isadmin);
-
-    //probe_windows::windows_test();
-
 }
 
 fn command_windows_disks_execute() {
@@ -636,7 +749,6 @@ fn command_windows_all_execute() {
 
     windows.probe_windows_get_process_list();
     print!("{}", windows.info_windows_get_process_list);
-
 }
 
 
@@ -649,8 +761,8 @@ fn command_windows_files_loop() -> i32 {
     'commandmain: loop {
         println!("");
         print!("rewin> windows> files> ");
-        let _=stdout().flush();
 
+        let _=stdout().flush();
         stdin.read_line(&mut command);
         command.make_ascii_lowercase();
 
@@ -723,7 +835,6 @@ fn command_windows_files_loop() -> i32 {
                 }
             },
         }
-        //println!("command is: {command}");
         command.clear();
     }
 }
@@ -736,7 +847,7 @@ fn command_windows_files_help() {
     println!("h / help / ?         - get available commands within this section");
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
-    println!("\nspecific commands");
+    println!("\nwindows files - specific commands");
     println!("ud             - list windows users directories.");
     println!("temp           - list files within windows temp directory.");
     println!("test           - test.");        
@@ -750,7 +861,6 @@ fn command_windows_files_help() {
     println!("localtemp      - list files within users %appdata%\\Local\\Temp directory.");
 }
 
-//aaa
 fn command_windows_files_ud_execute() {
 
     let mut windowsfiles = probe_windows_files::probewindowsfiles {
@@ -971,8 +1081,8 @@ fn windows_events_command_loop() -> i32 {
     'commandmain: loop {
         println!("");
         print!("rewin> windows> events> ");
-        let _=stdout().flush();
 
+        let _=stdout().flush();
         stdin.read_line(&mut command);
         command.make_ascii_lowercase();
 
@@ -1012,7 +1122,6 @@ fn windows_events_command_loop() -> i32 {
                 }
             },
         }
-        //println!("command is: {command}");
         command.clear();
     }
 }
@@ -1035,7 +1144,7 @@ fn windows_events_command_help() {
 
 fn windows_events_application_command_execute() {
 
-    let mut windowsevents = windowsevents::windowseventsprobe {
+    let mut windowsevents = probe_windows_events::windowseventsprobe {
         appication_logs: String::from("application logs setup"),
         security_logs: String::from("security logs setup"),
         setup_logs: String::from("setup logs setup"),
@@ -1056,8 +1165,8 @@ fn windows_process_command_loop() -> i32 {
     'commandmain: loop {
         println!("");
         print!("rewin> windows> process> ");
-        let _=stdout().flush();
 
+        let _=stdout().flush();
         stdin.read_line(&mut command);
         command.make_ascii_lowercase();
 
@@ -1097,7 +1206,6 @@ fn windows_process_command_loop() -> i32 {
                 }
             },
         }
-        //println!("command is: {command}");
         command.clear();
     }
 }
