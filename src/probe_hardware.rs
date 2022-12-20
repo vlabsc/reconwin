@@ -1,4 +1,4 @@
-// 0.16.2 - naming ...
+// 0.17 - new version
 
 use num_cpus;
 use colored::Colorize;
@@ -10,14 +10,12 @@ use local_ip_address::list_afinet_netifas;
 
 pub struct hardwareprobe {
     pub info_cpu: String,
-    //pub info_nw: String,
 }
 
 impl Default for hardwareprobe {
     fn default() -> Self {
         hardwareprobe {
             info_cpu: String::from("cpu info"),
-            //info_nw: String::from("nw info")
         }
      }
 }
@@ -37,23 +35,3 @@ impl hardwareprobe {
         }
     }
 }
-/*
-impl hardwareprobe {
-
-    pub fn get_network_interfaces(&mut self) {
-
-        self.info_nw = format!("{}" , format!("hardware probe - network interfaces ...\n").cyan().bold());
-
-        let network_interfaces = list_afinet_netifas().unwrap();
-
-        for (name, ip) in network_interfaces.iter() {
-            
-            if ip.is_ipv4() {
-                self.info_nw.push_str(format!("{}: IPv4 - {:?}\n", name, ip).as_str());
-            } else if ip.is_ipv6() {
-                self.info_nw.push_str(format!("{}: IPv6 - {:?}\n", name, ip).as_str());
-            }
-        }
-    }
-}
-*/

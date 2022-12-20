@@ -1,4 +1,4 @@
-// 0.16.2 - naming ...
+// 0.17 - new version
 
 use sysinfo::{Pid, ProcessExt, System, SystemExt, UserExt};
 use colored::Colorize;

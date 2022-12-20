@@ -1,4 +1,4 @@
-// 0.16.2 - naming ...
+// 0.17 - new version
 
 use num_cpus;
 use colored::Colorize;
@@ -54,8 +54,6 @@ impl networkprobe {
 
         for adapter in adapters {
 
-            //let new_ipaddress = adapter.ip_addresses();
-
             for new_ipaddress in adapter.ip_addresses() {
                 if new_ipaddress.is_ipv4() {
                     println!(
@@ -66,20 +64,7 @@ impl networkprobe {
                     )
                 }
             }
-
-                
-
-                /*
-                println!(
-                    "DNS: {:?} -> For IP {:?}, Type {}.",
-                    adapter.dns_servers(),
-                    adapter.ip_addresses(),
-                    adapter.IPv4(),
-                    adapter.friendly_name()
-                )
-                */
         }
-        
     }
 }
 
