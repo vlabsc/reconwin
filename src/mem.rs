@@ -1,4 +1,4 @@
-// 0.17 - new version
+// 0.17.1 - windows events implementation
 
 use sysinfo::{System, SystemExt};
 use colored::Colorize;
