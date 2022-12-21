@@ -31,10 +31,10 @@ fn main() {
     //return;
     
 
-    //let ret = command_main_loop();
+    let ret = command_main_loop();
     //let ret = command_network_loop();
     //let mut ret = windows_events_setup_command_execute();
-    let mut returne = windows_events_command_loop();
+    //let mut returne = windows_events_command_loop();
 
     print_end_of_program();
 }
@@ -134,6 +134,7 @@ fn command_main_help_execute() {
         println!("h / help / ?         - get available commands within this section");
         println!("quit / exit / q / e  - quit or exit reconwin program");
         println!("cls / clear          - clears the screen.");
+        println!("credits              - credits to cargo packages used, developers and others who directly or in-directly supported.");
         println!("\nmodules");
         println!("hardware / hw        - probe hardware related information");
         println!("windows / win        - probe windows related informationo (directories, temp files; etc)");
@@ -142,7 +143,7 @@ fn command_main_help_execute() {
     }
     
 fn command_main_version_execute() {
-    println!("{}" , format!("recon-windows v0.16 beta"));
+    println!("{}" , format!("recon-windows v0.17.1 beta"));
 }
 
 
@@ -219,6 +220,7 @@ fn command_hardware_help() {
     println!("h / help / ?         - get available commands within this section");
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
+    println!("credits              - credits to cargo packages used, developers and others who directly or in-directly supported.");
     println!("\nhardware module - specific commands");
     println!("cpu       - probe cpu information (frequency, number of cores; etc)");
     println!("nis       - probe network interfaces information (IPv6 IP address, IPv4 IP address; etc)");
@@ -343,6 +345,7 @@ fn command_network_help() {
     println!("h / help / ?         - get available commands within this section");
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
+    println!("credits              - credits to cargo packages used, developers and others who directly or in-directly supported.");
     println!("\nnetwork module - specific commands");
     println!("nis     - probe network interfaces information (IPv6 IP address, IPv4 IP address; etc)");
     println!("dns     - probe assigned DNS servers for each adapter.");
@@ -508,6 +511,7 @@ fn command_windows_help() {
     println!("h / help / ?         - get available commands within this section");
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
+    println!("credits              - credits to cargo packages used, developers and others who directly or in-directly supported.");
     println!("\nwindows module - specific commands");
     println!("os                   - probe operating system related details.");
     println!("ud                   - list windows users directories.");
@@ -865,6 +869,7 @@ fn command_windows_files_help() {
     println!("h / help / ?         - get available commands within this section");
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
+    println!("credits              - credits to cargo packages used, developers and others who directly or in-directly supported.");
     println!("\nwindows files - specific commands");
     println!("ud             - list windows users directories.");
     println!("temp           - list files within windows temp directory.");
@@ -1179,6 +1184,7 @@ fn windows_events_command_help() {
     println!("h / help / ?         - get available commands within this section");
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
+    println!("credits              - credits to cargo packages used, developers and others who directly or in-directly supported.");
     println!("\nwindows logs");
     println!("application / app      - list application logs.");
     println!("security / sec         - list security logs.");
@@ -1407,6 +1413,7 @@ fn windows_process_command_help() {
     println!("h / help / ?         - get available commands within this section");
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
+    println!("credits              - credits to cargo packages used, developers and others who directly or in-directly supported.");
     println!("\nwindows processes");
     println!("ps         - list running processes within windows system.");
     println!("which      - . TODO . which locates executable of running process. TODO .");
