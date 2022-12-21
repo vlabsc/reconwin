@@ -19,7 +19,6 @@ Future - TODO
 . contact vlabs.c [] gmail.com
 
 
-
 ![alt text](https://github.com/vlabsc/reconwin/blob/main/img/img1.JPG)
 
 ![alt text](https://github.com/vlabsc/reconwin/blob/main/img/img2.JPG)
