@@ -6,6 +6,8 @@ use std::io;
 use std::io::*;
 use std::process;
 
+use battery;
+
 
 extern crate winreg;
 
@@ -17,18 +19,33 @@ mod probe_windows_files;
 mod probe_windows_events;
 mod probe_network;
 
+mod tester;
 
 fn main() {
 
     hello_world();
+
     
+    //tester::tester_main();
+    //test();
+    //return;
+    
+
     //let ret = command_main_loop();
-    let ret = command_network_loop();
-    //let mut ret = command_windows_files_loop();
+    //let ret = command_network_loop();
+    //let mut ret = windows_events_setup_command_execute();
+    let mut returne = windows_events_command_loop();
+
     print_end_of_program();
 }
 
 
+
+
+fn test () {
+    
+
+}
 fn hello_world() {
 
     println!("");
@@ -203,11 +220,12 @@ fn command_hardware_help() {
     println!("quit / exit / q / e  - quit or exit reconwin program");
     println!("cls / clear          - clears the screen.");
     println!("\nhardware module - specific commands");
-    println!("cpu     - probe cpu information (frequency, number of cores; etc)");
-    println!("nis     - probe network interfaces information (IPv6 IP address, IPv4 IP address; etc)");
-    println!("mem     - probe memory related information (total memory, available free, utilized)");
-    println!("disks   - list available disks within windows system.");
-    println!("all     - probe all info - cpu, network and memory.");
+    println!("cpu       - probe cpu information (frequency, number of cores; etc)");
+    println!("nis       - probe network interfaces information (IPv6 IP address, IPv4 IP address; etc)");
+    println!("mem       - probe memory related information (total memory, available free, utilized)");
+    println!("disks     - list available disks within windows system.");
+    println!("battery   - . TODO . probe battery related information.");
+    println!("all       - probe all info - cpu, network and memory.");
 }
 
 
@@ -1107,8 +1125,35 @@ fn windows_events_command_loop() -> i32 {
             "cls" | "clear" => {
                 clrscr();
             },
-            "application" | "app"=> {
+            "application" | "app" => {
                 windows_events_application_command_execute();
+            },
+            "security" | "sec" => {
+                windows_events_security_command_execute();
+            },
+            "setup" | "set" => {
+                windows_events_setup_command_execute();
+            },
+            "system" | "sys" => {
+                windows_events_system_command_execute();
+            },
+            "happ" => {
+                windows_events_happ_command_execute();
+            },
+            "hsec" => {
+                windows_events_hsec_command_execute();
+            },
+            "hset" => {
+                windows_events_hset_command_execute();
+            },
+            "hsys" => {
+                windows_events_hsys_command_execute();
+            },
+            "hfe" => {
+                windows_events_hfe_command_execute();
+            },
+            "htot" => {
+                windows_events_htot_command_execute();
             },
             ".." => {
                 return 55;
@@ -1140,12 +1185,18 @@ fn windows_events_command_help() {
     println!("setup / set            - list setup logs.");
     println!("system / sys           - list system logs.");
     println!("forwardedevents / fe   - list forwarded events logs.");
+    println!("happ                   - how many application event records available.");
+    println!("hsec                   - how many security event records available.");
+    println!("hset                   - how many setup event records available.");
+    println!("hsys                   - how many system event records available.");
+    println!("htot                   - how many total events available under Windows Logs.");
+
 }
 
 fn windows_events_application_command_execute() {
 
     let mut windowsevents = probe_windows_events::windowseventsprobe {
-        appication_logs: String::from("application logs setup"),
+        application_logs: String::from("application logs setup"),
         security_logs: String::from("security logs setup"),
         setup_logs: String::from("setup logs setup"),
         system_logs: String::from("system logs setup"),
@@ -1153,9 +1204,147 @@ fn windows_events_application_command_execute() {
     };
 
     windowsevents.windows_events_application_logs();
-    print!("{}", windowsevents.appication_logs);
+    print!("{}", windowsevents.application_logs);
 }
 
+fn windows_events_security_command_execute() {
+
+    let mut windowsevents = probe_windows_events::windowseventsprobe {
+        application_logs: String::from("application logs setup"),
+        security_logs: String::from("security logs setup"),
+        setup_logs: String::from("setup logs setup"),
+        system_logs: String::from("system logs setup"),
+        forwardedevents_logs: String::from("forwarded events logs setup"),
+    };
+
+    windowsevents.windows_events_security_logs();
+    print!("{}", windowsevents.security_logs);
+}
+
+fn windows_events_setup_command_execute() {
+
+    let mut windowsevents = probe_windows_events::windowseventsprobe {
+        application_logs: String::from("application logs setup"),
+        security_logs: String::from("security logs setup"),
+        setup_logs: String::from("setup logs setup"),
+        system_logs: String::from("system logs setup"),
+        forwardedevents_logs: String::from("forwarded events logs setup"),
+    };
+
+    windowsevents.windows_events_setup_logs();
+    print!("{}", windowsevents.setup_logs);
+}
+
+fn windows_events_system_command_execute() {
+
+    let mut windowsevents = probe_windows_events::windowseventsprobe {
+        application_logs: String::from("application logs setup"),
+        security_logs: String::from("security logs setup"),
+        setup_logs: String::from("setup logs setup"),
+        system_logs: String::from("system logs setup"),
+        forwardedevents_logs: String::from("forwarded events logs setup"),
+    };
+
+    windowsevents.windows_events_system_logs();
+    print!("{}", windowsevents.system_logs);
+}
+
+fn windows_events_happ_command_execute() {
+
+    let mut windowseventsprobehowmany = probe_windows_events::windowseventsprobe_howmany {
+        info_happlication_logs: String::from("number"),
+        info_hsecurity_logs: String::from("number"),
+        info_hsetup_logs: String::from("number"),
+        info_hsystem_logs: String::from("number"),
+        info_hfe_logs: String::from("number"),
+        info_htot_logs: String::from("number"),
+    };
+
+    println!("calculating total number of application logs available ...");
+    windowseventsprobehowmany.probe_happlication_logs();
+    print!("{}", windowseventsprobehowmany.info_happlication_logs);
+}
+
+fn windows_events_hsec_command_execute() {
+
+    let mut windowseventsprobehowmany = probe_windows_events::windowseventsprobe_howmany {
+        info_happlication_logs: String::from("number"),
+        info_hsecurity_logs: String::from("number"),
+        info_hsetup_logs: String::from("number"),
+        info_hsystem_logs: String::from("number"),
+        info_hfe_logs: String::from("number"),
+        info_htot_logs: String::from("number"),
+    };
+
+    println!("calculating total number of security logs available ...");
+    windowseventsprobehowmany.probe_hsecurity_logs();
+    print!("{}", windowseventsprobehowmany.info_hsecurity_logs);
+}
+
+fn windows_events_hset_command_execute() {
+
+    let mut windowseventsprobehowmany = probe_windows_events::windowseventsprobe_howmany {
+        info_happlication_logs: String::from("number"),
+        info_hsecurity_logs: String::from("number"),
+        info_hsetup_logs: String::from("number"),
+        info_hsystem_logs: String::from("number"),
+        info_hfe_logs: String::from("number"),
+        info_htot_logs: String::from("number"),
+    };
+
+    println!("calculating total number of setup logs available ...");
+    windowseventsprobehowmany.probe_hsetup_logs();
+    print!("{}", windowseventsprobehowmany.info_hsetup_logs);
+}
+
+
+fn windows_events_hsys_command_execute() {
+
+    let mut windowseventsprobehowmany = probe_windows_events::windowseventsprobe_howmany {
+        info_happlication_logs: String::from("number"),
+        info_hsecurity_logs: String::from("number"),
+        info_hsetup_logs: String::from("number"),
+        info_hsystem_logs: String::from("number"),
+        info_hfe_logs: String::from("number"),
+        info_htot_logs: String::from("number"),
+    };
+
+    println!("calculating total number of system logs available ...");
+    windowseventsprobehowmany.probe_hsystem_logs();
+    print!("{}", windowseventsprobehowmany.info_hsystem_logs);
+}
+
+fn windows_events_hfe_command_execute() {
+
+    let mut windowseventsprobehowmany = probe_windows_events::windowseventsprobe_howmany {
+        info_happlication_logs: String::from("number"),
+        info_hsecurity_logs: String::from("number"),
+        info_hsetup_logs: String::from("number"),
+        info_hsystem_logs: String::from("number"),
+        info_hfe_logs: String::from("number"),
+        info_htot_logs: String::from("number"),
+    };
+
+    println!("calculating total number of forwarded events logs available ...");
+    windowseventsprobehowmany.probe_hfe_logs();
+    print!("{}", windowseventsprobehowmany.info_hfe_logs);
+}
+
+fn windows_events_htot_command_execute() {
+
+    let mut windowseventsprobehowmany = probe_windows_events::windowseventsprobe_howmany {
+        info_happlication_logs: String::from("number"),
+        info_hsecurity_logs: String::from("number"),
+        info_hsetup_logs: String::from("number"),
+        info_hsystem_logs: String::from("number"),
+        info_hfe_logs: String::from("number"),
+        info_htot_logs: String::from("number"),
+    };
+
+    println!("total number of events under Windows logs... this may take some time... please wait...");
+    windowseventsprobehowmany.probe_htot_logs();
+    print!("{}", windowseventsprobehowmany.info_htot_logs);
+}
 
 fn windows_process_command_loop() -> i32 {
 

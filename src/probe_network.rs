@@ -53,7 +53,6 @@ impl networkprobe {
         adapters.sort_by(|ip1, ip2| ip1.ipv4_metric().cmp(&ip2.ipv4_metric()));
 
         for adapter in adapters {
-
             for new_ipaddress in adapter.ip_addresses() {
                 if new_ipaddress.is_ipv4() {
                     println!(
