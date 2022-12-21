@@ -40,6 +40,7 @@ impl windowseventsprobe {
         event_level_map.insert (4, "Informational");
         event_level_map.insert (5, "Verbose");
         
+
         self.application_logs = format!("probing application logs... \n").cyan().bold().to_string();
     
         let fp = PathBuf::from(format!("C:\\Windows\\System32\\winevt\\Logs\\Application.evtx"));
@@ -47,7 +48,7 @@ impl windowseventsprobe {
 
         let mut row = 0;
         self.application_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
-        self.application_logs.push_str(format!(" record   provider                                      time                          level               task     pid      tid\n").as_str());
+        self.application_logs.push_str(format!(" event    provider                                      time                          level               task     pid      tid\n").as_str());
         self.application_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
         let mut recordscount = 0;
 
@@ -68,7 +69,10 @@ impl windowseventsprobe {
 
 
                     // logic to find sourcename
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "Provider Name=", "\"", 15);
+                    let mut startindex = r.data.find("Provider Name=").unwrap_or(0) + 15;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 15 {
                         self.application_logs.push_str(format!("No event source found.").as_str());
@@ -80,11 +84,15 @@ impl windowseventsprobe {
 
                     //logic to print spaces - 46 spaces
                     for x in 0..totalspaces {
+                        //print(" ");
                         self.application_logs.push_str(format!(" ").as_str());
                     }
 
                     // logic to find timestamp
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "SystemTime=", "\"", 12);
+                    let mut startindex = r.data.find("SystemTime=").unwrap_or(0) + 12;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
 
                     //logic to print spaces - 30 spaces
@@ -97,14 +105,25 @@ impl windowseventsprobe {
                     }
 
                     for x in 0..totalspaces {
+                        //print(" ");
                         self.application_logs.push_str(format!(" ").as_str());
                     }
 
                     // logic to find level
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Level>", "</L", 7);
-                    let mut final_string_int = final_string.parse::<i32>().unwrap();
+                    let mut startindex = r.data.find("<Level>").unwrap_or(0) + 7;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("</L").unwrap_or(0);
+                    
+                    let mut finali_string = &int_string[0..endindex];
+                    let mut integerval = finali_string.parse::<i32>().unwrap();
+
+                    let mut final_string = &int_string[0..endindex];
+
                     let mut finall_string = String::new();
-                    finall_string = format!("{} ({})", final_string, event_level_map.get(&final_string_int).copied().unwrap());
+                    finall_string = format!("{} ({})", finali_string, event_level_map.get(&integerval).copied().unwrap());
+
+                    //println!("level: {}", finall_string);                    
+
 
                     if startindex == 15 {
                         self.application_logs.push_str(format!("No level id.").as_str());
@@ -120,7 +139,10 @@ impl windowseventsprobe {
                     }
 
                     // logic to find task
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Task>", "</T", 6);
+                    let mut startindex = r.data.find("<Task>").unwrap_or(0) + 6;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("</T").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 15 {
                         self.application_logs.push_str(format!("No task id.").as_str());
@@ -136,7 +158,10 @@ impl windowseventsprobe {
                     }
 
                     // logic to find pid
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Execution ProcessID=", "\"", 22);
+                    let mut startindex = r.data.find("<Execution ProcessID=").unwrap_or(0) + 22;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 22 {
                         self.application_logs.push_str(format!("No pid.").as_str());
@@ -152,9 +177,12 @@ impl windowseventsprobe {
                     }
 
                     // logic to find tid thread id
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "ThreadID=\"", "\"", 10);
+                    let mut startindex = r.data.find("ThreadID=\"").unwrap_or(0) + 10;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
-                    if startindex == 9 {
+                    if startindex == 11 {
                         self.application_logs.push_str(format!("No tid.").as_str());
                         totalspaces = 9 - ("No tid.".len());
                     } else {
@@ -170,21 +198,20 @@ impl windowseventsprobe {
                     self.application_logs.push_str(format!("\n").as_str());
                     row = row + 1;
                     recordscount = recordscount + 1;
-
-                    //println!("original: {}", r.data);
                 },
                 Err(e) => println!("error in record: {}", e),
             }
             //row = row + 1;
-            /*if recordscount > 1111 {
+            /*if row > 509 {
                 break;
             }*/
             if row > 32 {
                 self.application_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
-                self.application_logs.push_str(format!(" record   provider                                      time                          level               task     pid      tid\n").as_str());
+                self.application_logs.push_str(format!(" event    provider                                      time                          level               task     pid      tid\n").as_str());
                 self.application_logs.push_str(format!("-----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
                 row = 0;
             }
+            //println!("");
         }
         self.application_logs.push_str(format!("total events listed: {} \n", recordscount).as_str());
     }   
@@ -210,7 +237,7 @@ impl windowseventsprobe {
 
         let mut row = 0;
         self.security_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
-        self.security_logs.push_str(format!(" record   provider                                      time                          level               task     pid      tid\n").as_str());
+        self.security_logs.push_str(format!(" event    provider                                      time                          level               task     pid      tid\n").as_str());
         self.security_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
         let mut recordscount = 0;
 
@@ -231,7 +258,10 @@ impl windowseventsprobe {
 
 
                     // logic to find sourcename
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "Provider Name=", "\"", 15);
+                    let mut startindex = r.data.find("Provider Name=").unwrap_or(0) + 15;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 15 {
                         self.security_logs.push_str(format!("No event source found.").as_str());
@@ -243,11 +273,15 @@ impl windowseventsprobe {
 
                     //logic to print spaces - 46 spaces
                     for x in 0..totalspaces {
+                        //print(" ");
                         self.security_logs.push_str(format!(" ").as_str());
                     }
 
                     // logic to find timestamp
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "SystemTime=", "\"", 12);
+                    let mut startindex = r.data.find("SystemTime=").unwrap_or(0) + 12;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
 
                     //logic to print spaces - 30 spaces
@@ -260,14 +294,25 @@ impl windowseventsprobe {
                     }
 
                     for x in 0..totalspaces {
+                        //print(" ");
                         self.security_logs.push_str(format!(" ").as_str());
                     }
 
                     // logic to find level
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Level>", "</L", 7);
-                    let mut final_string_int = final_string.parse::<i32>().unwrap();
+                    let mut startindex = r.data.find("<Level>").unwrap_or(0) + 7;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("</L").unwrap_or(0);
+                    
+                    let mut finali_string = &int_string[0..endindex];
+                    let mut integerval = finali_string.parse::<i32>().unwrap();
+
+                    let mut final_string = &int_string[0..endindex];
+
                     let mut finall_string = String::new();
-                    finall_string = format!("{} ({})", final_string, event_level_map.get(&final_string_int).copied().unwrap());
+                    finall_string = format!("{} ({})", finali_string, event_level_map.get(&integerval).copied().unwrap());
+
+                    //println!("level: {}", finall_string);                    
+
 
                     if startindex == 15 {
                         self.security_logs.push_str(format!("No level id.").as_str());
@@ -283,7 +328,10 @@ impl windowseventsprobe {
                     }
 
                     // logic to find task
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Task>", "</T", 6);
+                    let mut startindex = r.data.find("<Task>").unwrap_or(0) + 6;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("</T").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 15 {
                         self.security_logs.push_str(format!("No task id.").as_str());
@@ -299,7 +347,10 @@ impl windowseventsprobe {
                     }
 
                     // logic to find pid
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Execution ProcessID=", "\"", 22);
+                    let mut startindex = r.data.find("<Execution ProcessID=").unwrap_or(0) + 22;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 22 {
                         self.security_logs.push_str(format!("No pid.").as_str());
@@ -315,7 +366,14 @@ impl windowseventsprobe {
                     }
 
                     // logic to find tid thread id
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "ThreadID=\"", "\"", 10);
+                    let mut startindex = r.data.find("ThreadID=\"").unwrap_or(0) + 10;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
+
+                    //println!("startindex: {}", startindex);
+                    //println!("endindex: {}", endindex);
+                    //println!("int_string: {}", int_string);
 
                     if startindex == 9 {
                         self.security_logs.push_str(format!("No tid.").as_str());
@@ -344,13 +402,14 @@ impl windowseventsprobe {
             }*/
             if row > 32 {
                 self.security_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
-                self.security_logs.push_str(format!(" record   provider                                      time                          level               task     pid      tid\n").as_str());
+                self.security_logs.push_str(format!(" event    provider                                      time                          level               task     pid      tid\n").as_str());
                 self.security_logs.push_str(format!("-----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
                 row = 0;
             }
+            //println!("");
         }
         self.security_logs.push_str(format!("total events listed: {} \n", recordscount).as_str());
-  }   
+    }   
 }
 
 
@@ -375,7 +434,7 @@ impl windowseventsprobe {
 
         let mut row = 0;
         self.setup_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
-        self.setup_logs.push_str(format!(" record   provider                                      time                          level               task     pid      tid\n").as_str());
+        self.setup_logs.push_str(format!(" event    provider                                      time                          level               task     pid      tid\n").as_str());
         self.setup_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
         let mut recordscount = 0;
 
@@ -396,7 +455,14 @@ impl windowseventsprobe {
 
 
                     // logic to find sourcename
+                    //let mut startindex = r.data.find("Provider Name=").unwrap_or(0) + 15;
+                    //let mut int_string = &r.data[startindex..];
+                    //let mut endindex = int_string.find("\"").unwrap_or(0);
+                    //let mut final_string = &int_string[0..endindex];
+                    
                     let (mut startindex, mut final_string) = self.get_string_between(&r.data, "Provider Name=", "\"", 15);
+                    //println!("{stringg}");
+
 
                     if startindex == 15 {
                         self.setup_logs.push_str(format!("No event source found.").as_str());
@@ -408,11 +474,15 @@ impl windowseventsprobe {
 
                     //logic to print spaces - 46 spaces
                     for x in 0..totalspaces {
+                        //print(" ");
                         self.setup_logs.push_str(format!(" ").as_str());
                     }
 
                     // logic to find timestamp
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "SystemTime=", "\"", 12);
+                    let mut startindex = r.data.find("SystemTime=").unwrap_or(0) + 12;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
 
                     //logic to print spaces - 30 spaces
@@ -425,14 +495,25 @@ impl windowseventsprobe {
                     }
 
                     for x in 0..totalspaces {
+                        //print(" ");
                         self.setup_logs.push_str(format!(" ").as_str());
                     }
 
                     // logic to find level
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Level>", "</L", 7);
-                    let mut final_string_int = final_string.parse::<i32>().unwrap();
+                    let mut startindex = r.data.find("<Level>").unwrap_or(0) + 7;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("</L").unwrap_or(0);
+                    
+                    let mut finali_string = &int_string[0..endindex];
+                    let mut integerval = finali_string.parse::<i32>().unwrap();
+
+                    let mut final_string = &int_string[0..endindex];
+
                     let mut finall_string = String::new();
-                    finall_string = format!("{} ({})", final_string, event_level_map.get(&final_string_int).copied().unwrap());
+                    finall_string = format!("{} ({})", finali_string, event_level_map.get(&integerval).copied().unwrap());
+
+                    //println!("level: {}", finall_string);                    
+
 
                     if startindex == 15 {
                         self.setup_logs.push_str(format!("No level id.").as_str());
@@ -448,7 +529,10 @@ impl windowseventsprobe {
                     }
 
                     // logic to find task
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Task>", "</T", 6);
+                    let mut startindex = r.data.find("<Task>").unwrap_or(0) + 6;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("</T").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 15 {
                         self.setup_logs.push_str(format!("No task id.").as_str());
@@ -464,7 +548,10 @@ impl windowseventsprobe {
                     }
 
                     // logic to find pid
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Execution ProcessID=", "\"", 22);
+                    let mut startindex = r.data.find("<Execution ProcessID=").unwrap_or(0) + 22;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 22 {
                         self.setup_logs.push_str(format!("No pid.").as_str());
@@ -480,7 +567,14 @@ impl windowseventsprobe {
                     }
 
                     // logic to find tid thread id
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "ThreadID=\"", "\"", 10);
+                    let mut startindex = r.data.find("ThreadID=\"").unwrap_or(0) + 10;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
+
+                    //println!("startindex: {}", startindex);
+                    //println!("endindex: {}", endindex);
+                    //println!("int_string: {}", int_string);
 
                     if startindex == 9 {
                         self.setup_logs.push_str(format!("No tid.").as_str());
@@ -504,18 +598,42 @@ impl windowseventsprobe {
                 Err(e) => println!("error in record: {}", e),
             }
             //row = row + 1;
-            /*if recordscount > 111 {
+            if recordscount > 11 {
                 break;
-            }*/
+            }
             if row > 32 {
                 self.setup_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
-                self.setup_logs.push_str(format!(" record   provider                                      time                          level               task     pid      tid\n").as_str());
+                self.setup_logs.push_str(format!(" event    provider                                      time                          level               task     pid      tid\n").as_str());
                 self.setup_logs.push_str(format!("-----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
                 row = 0;
             }
+            //println!("");
         }
         self.setup_logs.push_str(format!("total events listed: {} \n", recordscount).as_str());
+        //let mut stringg = self.get_string_between("hey123hoi", "hey", "hoi", 3);
+        //println!("{stringg}");
     }   
+}
+
+
+impl windowseventsprobe {
+
+    pub fn get_string_between(&mut self, mainstring: &String, str1: &str, str2: &str, val: usize) -> (usize, String) {
+
+        //println!("args: {mainstring}, {str1}, {str2}, {val}");
+        
+        let mut startindex = mainstring.find(str1).unwrap_or(0) + val;
+        let mut int_string = &mainstring[startindex..];
+        let mut endindex = int_string.find(str2).unwrap_or(0);
+        let mut final_string = &int_string[0..endindex];
+
+        let mut final_stringg = String::from(final_string);
+        //let mut stringg = "hey";
+        //&stringg
+
+        (startindex, final_stringg)
+    }
+
 }
 
 
@@ -540,7 +658,7 @@ impl windowseventsprobe {
 
         let mut row = 0;
         self.system_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
-        self.system_logs.push_str(format!(" record   provider                                      time                          level               task     pid      tid\n").as_str());
+        self.system_logs.push_str(format!(" event    provider                                      time                          level               task     pid      tid\n").as_str());
         self.system_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
         let mut recordscount = 0;
 
@@ -561,7 +679,10 @@ impl windowseventsprobe {
 
 
                     // logic to find sourcename
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "Provider Name=", "\"", 15);
+                    let mut startindex = r.data.find("Provider Name=").unwrap_or(0) + 15;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 15 {
                         self.system_logs.push_str(format!("No event source found.").as_str());
@@ -573,11 +694,15 @@ impl windowseventsprobe {
 
                     //logic to print spaces - 46 spaces
                     for x in 0..totalspaces {
+                        //print(" ");
                         self.system_logs.push_str(format!(" ").as_str());
                     }
 
                     // logic to find timestamp
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "SystemTime=", "\"", 12);
+                    let mut startindex = r.data.find("SystemTime=").unwrap_or(0) + 12;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
 
                     //logic to print spaces - 30 spaces
@@ -590,14 +715,25 @@ impl windowseventsprobe {
                     }
 
                     for x in 0..totalspaces {
+                        //print(" ");
                         self.system_logs.push_str(format!(" ").as_str());
                     }
 
                     // logic to find level
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Level>", "</L", 7);
-                    let mut final_string_int = final_string.parse::<i32>().unwrap();
+                    let mut startindex = r.data.find("<Level>").unwrap_or(0) + 7;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("</L").unwrap_or(0);
+                    
+                    let mut finali_string = &int_string[0..endindex];
+                    let mut integerval = finali_string.parse::<i32>().unwrap();
+
+                    let mut final_string = &int_string[0..endindex];
+
                     let mut finall_string = String::new();
-                    finall_string = format!("{} ({})", final_string, event_level_map.get(&final_string_int).copied().unwrap());
+                    finall_string = format!("{} ({})", finali_string, event_level_map.get(&integerval).copied().unwrap());
+
+                    //println!("level: {}", finall_string);                    
+
 
                     if startindex == 15 {
                         self.system_logs.push_str(format!("No level id.").as_str());
@@ -613,7 +749,10 @@ impl windowseventsprobe {
                     }
 
                     // logic to find task
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Task>", "</T", 6);
+                    let mut startindex = r.data.find("<Task>").unwrap_or(0) + 6;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("</T").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 15 {
                         self.system_logs.push_str(format!("No task id.").as_str());
@@ -629,7 +768,10 @@ impl windowseventsprobe {
                     }
 
                     // logic to find pid
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "<Execution ProcessID=", "\"", 22);
+                    let mut startindex = r.data.find("<Execution ProcessID=").unwrap_or(0) + 22;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
 
                     if startindex == 22 {
                         self.system_logs.push_str(format!("No pid.").as_str());
@@ -645,7 +787,14 @@ impl windowseventsprobe {
                     }
 
                     // logic to find tid thread id
-                    let (mut startindex, mut final_string) = self.get_string_between(&r.data, "ThreadID=\"", "\"", 10);
+                    let mut startindex = r.data.find("ThreadID=\"").unwrap_or(0) + 10;
+                    let mut int_string = &r.data[startindex..];
+                    let mut endindex = int_string.find("\"").unwrap_or(0);
+                    let mut final_string = &int_string[0..endindex];
+
+                    //println!("startindex: {}", startindex);
+                    //println!("endindex: {}", endindex);
+                    //println!("int_string: {}", int_string);
 
                     if startindex == 9 {
                         self.system_logs.push_str(format!("No tid.").as_str());
@@ -674,34 +823,16 @@ impl windowseventsprobe {
             }*/
             if row > 32 {
                 self.system_logs.push_str(format!("----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
-                self.system_logs.push_str(format!(" record   provider                                      time                          level               task     pid      tid\n").as_str());
+                self.system_logs.push_str(format!(" event    provider                                      time                          level               task     pid      tid\n").as_str());
                 self.system_logs.push_str(format!("-----------------------------------------------------------------------------------------------------------------------------------------\n").as_str());
                 row = 0;
             }
+            //println!("");
         }
         self.system_logs.push_str(format!("total events listed: {} \n", recordscount).as_str());
-   }   
+    }   
 }
 
-impl windowseventsprobe {
-
-    pub fn get_string_between(&mut self, mainstring: &String, str1: &str, str2: &str, val: usize) -> (usize, String) {
-
-        //println!("args: {mainstring}, {str1}, {str2}, {val}");
-        
-        let mut startindex = mainstring.find(str1).unwrap_or(0) + val;
-        let mut int_string = &mainstring[startindex..];
-        let mut endindex = int_string.find(str2).unwrap_or(0);
-        let mut final_string = &int_string[0..endindex];
-
-        let mut final_stringg = String::from(final_string);
-        //let mut stringg = "hey";
-        //&stringg
-
-        (startindex, final_stringg)
-    }
-
-}
 
 impl windowseventsprobe_howmany {
 

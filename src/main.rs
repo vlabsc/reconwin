@@ -31,10 +31,10 @@ fn main() {
     //return;
     
 
-    let ret = command_main_loop();
+    //let ret = command_main_loop();
     //let ret = command_network_loop();
     //let mut ret = windows_events_setup_command_execute();
-    //let mut returne = windows_events_command_loop();
+    let mut returne = windows_events_command_loop();
 
     print_end_of_program();
 }
